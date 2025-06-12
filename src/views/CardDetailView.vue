@@ -20,14 +20,13 @@
             <p class="card-text">
               <strong>Categoria:</strong> {{ card.category }}<br>
               <strong>Descrizione:</strong> {{ card.description }}<br>
-              <strong>Codice a barre:</strong> {{ card.barcode }}
             </p>
           </div>
           <div class="col-md-6 text-center">
             <div class="mb-3">
               <h5>Codice a barre</h5>
               <div class="barcode-container">
-                <img :src="barcodeUrl" alt="Barcode" class="img-fluid">
+                <img style="width: 100%;" :src="barcodeUrl" alt="Barcode" class="img-fluid">
               </div>
             </div>
             <div>
