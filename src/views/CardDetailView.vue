@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2>Dettagli tessera</h2>
       <div>

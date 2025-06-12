@@ -1,6 +1,16 @@
 <template>
-  <div>
-    <h2 class="mb-4">Modifica tessera</h2>
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Modifica tessera</h2>
+      <div>
+        <router-link :to="`/cards/${card.id}/edit`" class="btn btn-primary me-2" title="Modifica">
+          <i class="material-icons">edit</i>
+        </router-link>
+        <router-link to="/cards" class="btn btn-secondary" title="Indietro">
+          <i class="material-icons">arrow_back</i>
+        </router-link>
+      </div>
+    </div>
 
     <form v-if="card" @submit.prevent="updateCard" class="card">
       <div class="card-body">

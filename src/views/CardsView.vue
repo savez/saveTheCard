@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2>Le mie tessere</h2>
       <div>
@@ -25,7 +25,7 @@
       <div v-for="card in filteredCards" :key="card.id" class="col-md-6 col-lg-12 mb-4">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">{{ card.name }}</h5>
+            <h5 class="card-title text-uppercase">{{ card.name }}</h5>
             <div v-if="card.barcode" class="mb-3 text-center">
               <img :src="getBarcodeUrl(card.barcode)" alt="Barcode" class="img-fluid" style="background:white; padding:0.5rem; border-radius:0.5rem; max-height:120px;" />
             </div>
