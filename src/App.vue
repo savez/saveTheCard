@@ -4,7 +4,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
+    <div class="container-fluid">
       <router-link class="navbar-brand" to="/">SaveTheCard</router-link>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -25,13 +25,26 @@ import HelloWorld from './components/HelloWorld.vue'
     </div>
   </nav>
 
-  <div class="container mt-4">
+  <main class="flex-grow-1">
     <router-view></router-view>
-  </div>
+  </main>
 </template>
 
 <style>
 body {
-  background-color: #f8f9fa;
+  background-color: var(--bg-primary);
+  margin: 0;
+  min-height: 100vh;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  padding: 1rem;
 }
 </style>

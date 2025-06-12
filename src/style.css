@@ -503,3 +503,60 @@ code, pre {
 .toast-body {
   color: var(--text-secondary) !important;
 }
+
+/* Container adjustments */
+.container {
+  max-width: 100% !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar adjustments */
+.navbar {
+  margin-bottom: 0 !important;
+}
+
+/* Main content area */
+.container > * {
+  width: 100%;
+}
+
+/* Card grid adjustments */
+.row {
+  margin: 0 !important;
+}
+
+.col-md-6, .col-lg-4 {
+  padding: 0.5rem !important;
+}
+
+/* Form adjustments */
+form.card {
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Ensure proper spacing in full width layout */
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+.mt-4 {
+  margin-top: 1.5rem !important;
+}
+
+/* Adjust card spacing in grid */
+.card {
+  margin-bottom: 1rem !important;
+}
+
+/* Ensure proper padding in full width layout */
+.p-4 {
+  padding: 1.5rem !important;
+}
