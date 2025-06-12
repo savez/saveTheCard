@@ -27,7 +27,7 @@
           <div class="card-body">
             <h5 class="card-title text-uppercase">{{ card.name }}</h5>
             <div v-if="card.barcode" class="mb-3 text-center">
-              <img :src="getBarcodeUrl(card.barcode)" alt="Barcode" class="img-fluid" style="background:white; padding:0.5rem; border-radius:0.5rem; max-height:120px;" />
+              <img style="width: 100%;" :src="getBarcodeUrl(card.barcode)" alt="Barcode" class="img-fluid" style="background:white; padding:0.5rem; border-radius:0.5rem; max-height:120px;" />
             </div>
             <p class="card-text">
               <strong>Categoria:</strong> {{ card.category }}<br>
