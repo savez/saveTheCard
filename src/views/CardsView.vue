@@ -17,7 +17,7 @@
         type="text"
         class="form-control"
         v-model="searchQuery"
-        placeholder="Cerca per nome o descrizione..."
+        placeholder="Cerca per nome o descrizione o categoia ..."
       >
     </div>
 

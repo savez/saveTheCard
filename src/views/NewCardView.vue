@@ -115,7 +115,8 @@ const startScanner = () => {
     { facingMode: 'environment' },
     {
       fps: 10,
-      qrbox: { width: 250, height: 250 }
+      qrbox: { width: 400, height: 350 },
+      formatsToSupport: ['QR_CODE', 'EAN_13', 'EAN_8', 'CODE_128', 'CODE_39']
     },
     onScanSuccess,
     onScanFailure
