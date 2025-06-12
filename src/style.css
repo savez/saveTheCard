@@ -504,59 +504,130 @@ code, pre {
   color: var(--text-secondary) !important;
 }
 
-/* Container adjustments */
-.container {
-  max-width: 100% !important;
+/* Full width layout adjustments */
+.container, .container-fluid {
+  max-width: none !important;
+  width: 100% !important;
   padding: 1rem !important;
   margin: 0 !important;
 }
 
-#app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.row {
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
 }
 
-/* Navbar adjustments */
-.navbar {
-  margin-bottom: 0 !important;
+/* Remove Bootstrap's default container max-width */
+@media (min-width: 576px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
 }
 
-/* Main content area */
-.container > * {
-  width: 100%;
+@media (min-width: 768px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
+}
+
+/* Ensure all content takes full width */
+#app > * {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+main {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
 }
 
 /* Card grid adjustments */
-.row {
-  margin: 0 !important;
-}
-
-.col-md-6, .col-lg-4 {
-  padding: 0.5rem !important;
+.card {
+  width: 100% !important;
+  margin-bottom: 1rem !important;
+  border-radius: 0 !important;
 }
 
 /* Form adjustments */
 form.card {
+  width: 100% !important;
   margin: 0 !important;
   border-radius: 0 !important;
 }
 
-/* Ensure proper spacing in full width layout */
-.mb-4 {
-  margin-bottom: 1.5rem !important;
+/* Ensure proper spacing between elements */
+.gap-2 {
+  gap: 0.5rem !important;
 }
 
-.mt-4 {
-  margin-top: 1.5rem !important;
+/* Ensure proper alignment in full width layout */
+.d-flex {
+  width: 100% !important;
 }
 
-/* Adjust card spacing in grid */
-.card {
-  margin-bottom: 1rem !important;
+.justify-content-between {
+  width: 100% !important;
 }
 
-/* Ensure proper padding in full width layout */
-.p-4 {
-  padding: 1.5rem !important;
+/* Ensure proper spacing in card groups */
+.btn-group {
+  width: 100% !important;
+}
+
+.btn-group .btn {
+  flex: 1 !important;
+}
+
+/* Remove any max-width constraints */
+* {
+  max-width: none !important;
+}
+
+/* Ensure navbar is full width */
+.navbar {
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+.navbar > .container-fluid {
+  padding: 0 1rem !important;
+}
+
+/* Ensure all sections take full width */
+section, div, article, aside {
+  max-width: none !important;
+}
+
+/* Ensure all Bootstrap columns take full width */
+[class*="col-"] {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0.5rem !important;
+}
+
+/* Ensure all content is properly padded */
+.content-wrapper {
+  padding: 1rem !important;
+  width: 100% !important;
+  max-width: none !important;
 }

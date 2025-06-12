@@ -41,10 +41,21 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
 }
 
 main {
   flex: 1;
   padding: 1rem;
+  width: 100%;
+}
+
+.navbar {
+  width: 100%;
+}
+
+.container-fluid {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 </style>
