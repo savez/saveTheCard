@@ -26,12 +26,14 @@
         <div class="card h-100">
           <div class="card-body">
             <h5 class="card-title text-uppercase">{{ card.name }}</h5>
-            <div v-if="card.barcode" class="mb-3 text-center">
-              <img style="width: 100%;" :src="getBarcodeUrl(card.barcode)" alt="Barcode" class="img-fluid" style="background:white; padding:0.5rem; border-radius:0.5rem; max-height:120px;" />
+            <div class="mb-3">
+              <div class="barcode-container">
+                <img style="width: 100%;" :src="getBarcodeUrl(card.barcode)" alt="Barcode" class="img-fluid">
+              </div>
             </div>
             <p class="card-text">
-              <strong>Categoria:</strong> {{ card.category }}<br>
-              <strong>Descrizione:</strong> {{ card.description }}
+              <strong v-if="card.category">Categoria:</strong> {{ card.category }}<br>
+              <strong v-if="card.description">Descrizione:</strong> {{ card.description }}
             </p>
           </div>
           <div class="card-footer bg-transparent">
@@ -39,7 +41,7 @@
               <router-link :to="`/cards/${card.id}`" class="btn btn-outline-primary" title="Dettagli">
                 <i class="material-icons">visibility</i>
               </router-link>
-              <router-link :to="`/cards/${card.id}/edit`" class="btn btn-outline-secondary" title="Modifica">
+              <router-link :to="`/cards/${card.id}/edit`" class="btn btn-outline-warning" title="Modifica">
                 <i class="material-icons">edit</i>
               </router-link>
               <button @click="deleteCard(card.id)" class="btn btn-outline-danger" title="Elimina">
