@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-      <router-link class="navbar-brand" to="/">SaveTheCard</router-link>
+      <router-link class="navbar-brand" to="/">SaveTheCard <small>{{ version }}</small></router-link>
     </div>
   </nav>
 
@@ -9,6 +9,12 @@
     <router-view></router-view>
   </main>
 </template>
+
+<script setup>
+import pkg from '../package.json';
+
+const version = pkg.version;
+</script>
 
 <style>
 body {
