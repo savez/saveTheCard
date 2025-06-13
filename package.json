@@ -1,7 +1,7 @@
 {
   "name": "savethecard",
   "private": false,
-  "version": "0.1.9",
+  "version": "0.1.11",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -24,6 +24,7 @@
     "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
+    "prettier": "^2.3.0",
     "@vitejs/plugin-vue": "^5.2.3",
     "vite": "^6.3.5"
   }

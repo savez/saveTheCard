@@ -9,7 +9,7 @@ SaveTheCard è un'applicazione web per gestire le tessere fedeltà e sconto dei 
 - 💾 Salvataggio locale dei dati
 - 📤 Esportazione dei dati in formato CSV
 - 🔄 Condivisione delle tessere tramite QR Code
-- 📥 Importazione delle tessere tramite QR Code
+- 📥 Importazione delle tessere tramite QR Code (supporto per JSON con dati della tessera)
 - ✏️ Modifica e cancellazione delle tessere
 - 🔍 Visualizzazione del codice a barre
 - 📋 Elenco delle tessere salvate
@@ -49,6 +49,7 @@ npm run dev
 - HTML5-QRCode
 - JsBarcode
 - QRCode
+- vue-qrcode-reader
 
 ## Struttura del progetto
 
