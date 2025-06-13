@@ -6,9 +6,20 @@
         <button class="btn btn-success me-2" @click="exportToCSV" title="Esporta CSV">
           <i class="material-icons">download</i>
         </button>
+        <button class="btn btn-info me-2" @click="showScanner = true" title="Importa da QRCode">
+          <i class="material-icons">qr_code_scanner</i>
+        </button>
         <router-link to="/cards/new" class="btn btn-primary" title="Nuova tessera">
           <i class="material-icons">add</i>
         </router-link>
+      </div>
+    </div>
+
+    <div v-if="showScanner" class="scanner-modal">
+      <div class="scanner-content">
+        <h3>Scansiona QR Code</h3>
+        <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
+        <button class="btn btn-secondary mt-3" @click="showScanner = false">Chiudi</button>
       </div>
     </div>
 
@@ -63,9 +74,11 @@
 import { ref, computed } from 'vue'
 import { useCardsStore } from '../stores/cards'
 import JsBarcode from 'jsbarcode'
+import { QrcodeStream } from 'vue-qrcode-reader'
 
 const store = useCardsStore()
 const searchQuery = ref('')
+const showScanner = ref(false)
 
 const filteredCards = computed(() => {
   const query = searchQuery.value.toLowerCase()
@@ -100,4 +113,42 @@ function getBarcodeUrl(barcode) {
 const exportToCSV = () => {
   store.exportToCSV()
 }
+
+const onDecode = (decodedString) => {
+  try {
+    const cardData = JSON.parse(decodedString)
+    store.addCard(cardData)
+    showScanner.value = false
+  } catch (error) {
+    console.error('Errore nella lettura del QR Code:', error)
+  }
+}
+
+const onInit = (promise) => {
+  promise.catch(error => {
+    console.error('Errore nell\'inizializzazione della fotocamera:', error)
+  })
+}
 </script>
+
+<style scoped>
+.scanner-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.scanner-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+</style>
