@@ -64,6 +64,28 @@ export const useCardsStore = defineStore("cards", () => {
   }
  }
 
+ function importFromCSV(file) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const text = e.target.result;
+    const lines = text.split('\n').filter(Boolean);
+    const headers = lines[0].split(',');
+    const importedCards = lines.slice(1).map(line => {
+      const values = line.split(',');
+      const card = {};
+      headers.forEach((header, i) => {
+        card[header] = values[i];
+      });
+      card.id = Number(card.id) || Date.now() + Math.floor(Math.random() * 10000);
+      return card;
+    });
+    // Sostituisci tutte le tessere con quelle importate
+    cards.value = importedCards;
+    saveToLocalStorage();
+  };
+  reader.readAsText(file);
+ }
+
  // Load cards from localStorage on store initialization
  loadFromLocalStorage();
 
@@ -74,5 +96,6 @@ export const useCardsStore = defineStore("cards", () => {
   deleteCard,
   getCard,
   exportToCSV,
+  importFromCSV,
  };
 });

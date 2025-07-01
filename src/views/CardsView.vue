@@ -6,6 +6,10 @@
         <button class="btn btn-success me-2" @click="exportToCSV" title="Esporta CSV">
           <i class="material-icons">download</i>
         </button>
+        <label class="btn btn-warning me-2 mb-0" title="Importa CSV">
+          <i class="material-icons">upload</i>
+          <input type="file" accept=".csv" @change="onCSVImport" style="display:none">
+        </label>
         <button class="btn btn-info me-2" @click="showScanner = true" title="Importa da QRCode">
           <i class="material-icons">qr_code_scanner</i>
         </button>
@@ -112,6 +116,14 @@ function getBarcodeUrl(barcode) {
 
 const exportToCSV = () => {
   store.exportToCSV()
+}
+
+const onCSVImport = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    store.importFromCSV(file)
+    event.target.value = '' // reset input
+  }
 }
 
 const onDecode = (decodedString) => {
