@@ -12,8 +12,6 @@ permissions:
 jobs:
  build-and-deploy:
   runs-on: ubuntu-latest
-  env:
-    GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
   steps:
    - uses: actions/checkout@v4
 
@@ -28,6 +26,8 @@ jobs:
 
    - name: Build
      run: npm run build
+     env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
    - name: Setup Pages
      uses: actions/configure-pages@v4
