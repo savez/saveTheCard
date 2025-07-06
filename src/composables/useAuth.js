@@ -1,7 +1,6 @@
 import { ref, computed } from "vue";
 
-const CLIENT_ID =
- process.env.VITE_GOOGLE_CLIENT_ID;
+const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 console.log('CLIENT_ID', CLIENT_ID);
 
