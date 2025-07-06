@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 
 const CLIENT_ID =
- "29363926332-dnbj6s8j3bitbdjs384j26k3bcnptbrg.apps.googleusercontent.com";
+ process.env.GOOGLE_CLIENT_ID;
 const SCOPES =
  "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file openid email profile";
 
@@ -113,7 +113,7 @@ async function createOrUpdateFile(filename, content) {
   setSheetUrl(fileUrl);
   return fileUrl;
 }
-
+ù
 async function loadFileContent(filename) {
   await loadGapi();
   window.gapi.client.setToken({ access_token: token.value });

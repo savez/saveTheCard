@@ -23,8 +23,8 @@
     "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.3",
     "prettier": "^2.3.0",
+    "@vitejs/plugin-vue": "^5.2.3",
     "vite": "^6.3.5"
   }
 }
