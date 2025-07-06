@@ -115,7 +115,7 @@ async function createOrUpdateFile(filename, content) {
   setSheetUrl(fileUrl);
   return fileUrl;
 }
-ù
+
 async function loadFileContent(filename) {
   await loadGapi();
   window.gapi.client.setToken({ access_token: token.value });
