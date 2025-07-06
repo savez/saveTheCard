@@ -1,0 +1,633 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Dark theme colors */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --accent-color: #646cff;
+  --accent-hover: #535bf2;
+  --border-color: #404040;
+  --card-bg: #2d2d2d;
+  --input-bg: #333333;
+  --input-border: #404040;
+  --input-text: #ffffff;
+  --btn-primary-bg: #646cff;
+  --btn-primary-hover: #535bf2;
+  --btn-secondary-bg: #404040;
+  --btn-secondary-hover: #4d4d4d;
+  --danger-color: #dc3545;
+  --success-color: #28a745;
+
+  color-scheme: dark;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary) !important;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.card {
+  padding: 2em;
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.form-control, .form-select {
+  background-color: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--input-text) !important;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--input-bg) !important;
+  border-color: var(--accent-color) !important;
+  color: var(--input-text) !important;
+  box-shadow: 0 0 0 0.25rem rgba(100, 108, 255, 0.25) !important;
+}
+
+.form-control::placeholder {
+  color: var(--text-secondary) !important;
+}
+
+.btn-primary {
+  background-color: var(--btn-primary-bg) !important;
+  border-color: var(--btn-primary-bg) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--btn-primary-hover) !important;
+  border-color: var(--btn-primary-hover) !important;
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary-bg) !important;
+  border-color: var(--btn-secondary-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-secondary:hover {
+  background-color: var(--btn-secondary-hover) !important;
+  border-color: var(--btn-secondary-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-outline-primary {
+  color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-outline-secondary {
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--btn-secondary-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-outline-danger {
+  color: var(--danger-color) !important;
+  border-color: var(--danger-color) !important;
+}
+
+.btn-outline-danger:hover {
+  background-color: var(--danger-color) !important;
+  border-color: var(--danger-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.navbar {
+  background-color: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: var(--text-secondary) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: var(--text-primary) !important;
+}
+
+.navbar-dark .navbar-brand {
+  color: var(--text-primary) !important;
+}
+
+.modal-content {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-color) !important;
+}
+
+.alert {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+  border-color: #ffc107 !important;
+  color: #ffc107 !important;
+}
+
+/* Material Icons color adjustment */
+.material-icons {
+  color: inherit !important;
+}
+
+/* Ensure Material Icons are visible in buttons */
+.btn .material-icons {
+  color: var(--text-primary) !important;
+}
+
+.btn-outline-primary .material-icons {
+  color: var(--accent-color) !important;
+}
+
+.btn-outline-primary:hover .material-icons {
+  color: var(--text-primary) !important;
+}
+
+.btn-outline-secondary .material-icons {
+  color: var(--text-secondary) !important;
+}
+
+.btn-outline-secondary:hover .material-icons {
+  color: var(--text-primary) !important;
+}
+
+.btn-outline-danger .material-icons {
+  color: var(--danger-color) !important;
+}
+
+.btn-outline-danger:hover .material-icons {
+  color: var(--text-primary) !important;
+}
+
+/* Ensure Material Icons are visible in nav links */
+.nav-link .material-icons {
+  color: var(--text-secondary) !important;
+}
+
+.nav-link:hover .material-icons {
+  color: var(--text-primary) !important;
+}
+
+/* Barcode and QR code container adjustments */
+.barcode-container, .qrcode-container {
+  background-color: white !important;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Table adjustments */
+.table {
+  color: var(--text-primary) !important;
+}
+
+.table td, .table th {
+  border-color: var(--border-color) !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Override Bootstrap's default light theme */
+.bg-light {
+  background-color: var(--bg-secondary) !important;
+}
+
+.text-dark {
+  color: var(--text-primary) !important;
+}
+
+.border {
+  border-color: var(--border-color) !important;
+}
+
+/* Ensure form labels are visible */
+label {
+  color: var(--text-primary) !important;
+}
+
+/* Ensure select options are visible */
+select option {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Ensure dropdown menus are dark themed */
+.dropdown-menu {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dropdown-item {
+  color: var(--text-primary) !important;
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Ensure tooltips are dark themed */
+.tooltip {
+  --bs-tooltip-bg: var(--bg-secondary) !important;
+  --bs-tooltip-color: var(--text-primary) !important;
+}
+
+/* Ensure all text elements are visible */
+p, .card-text, .lead, .text-muted, .text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.card-title {
+  color: var(--text-primary) !important;
+}
+
+/* Ensure all text in cards is visible */
+.card-body {
+  color: var(--text-secondary) !important;
+}
+
+.card-body strong {
+  color: var(--text-primary) !important;
+}
+
+/* Ensure all text in modals is visible */
+.modal-body {
+  color: var(--text-secondary) !important;
+}
+
+/* Ensure all text in alerts is visible */
+.alert {
+  color: var(--text-primary) !important;
+}
+
+.alert p, .alert .lead {
+  color: inherit !important;
+}
+
+/* Ensure all text in form groups is visible */
+.form-label {
+  color: var(--text-primary) !important;
+}
+
+.form-text {
+  color: var(--text-secondary) !important;
+}
+
+/* Ensure all text in navigation is visible */
+.nav-link {
+  color: var(--text-secondary) !important;
+}
+
+.nav-link:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Ensure all text in buttons is visible */
+.btn {
+  color: var(--text-primary) !important;
+}
+
+.btn-outline-primary, .btn-outline-secondary, .btn-outline-danger {
+  color: inherit !important;
+}
+
+/* Ensure all text in lists is visible */
+.list-group-item {
+  background-color: var(--card-bg) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Ensure all text in badges is visible */
+.badge {
+  color: var(--text-primary) !important;
+}
+
+/* Ensure all text in small elements is visible */
+small, .small {
+  color: var(--text-secondary) !important;
+}
+
+/* Ensure all text in blockquotes is visible */
+blockquote {
+  color: var(--text-secondary) !important;
+  border-left-color: var(--border-color) !important;
+}
+
+/* Ensure all text in code blocks is visible */
+code, pre {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Ensure all text in tables is visible */
+.table thead th {
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+.table tbody td {
+  color: var(--text-secondary) !important;
+}
+
+/* Ensure all text in pagination is visible */
+.pagination {
+  --bs-pagination-color: var(--text-primary) !important;
+  --bs-pagination-bg: var(--card-bg) !important;
+  --bs-pagination-border-color: var(--border-color) !important;
+  --bs-pagination-hover-color: var(--text-primary) !important;
+  --bs-pagination-hover-bg: var(--bg-secondary) !important;
+  --bs-pagination-hover-border-color: var(--border-color) !important;
+  --bs-pagination-active-color: var(--text-primary) !important;
+  --bs-pagination-active-bg: var(--accent-color) !important;
+  --bs-pagination-active-border-color: var(--accent-color) !important;
+}
+
+/* Ensure all text in breadcrumbs is visible */
+.breadcrumb {
+  background-color: var(--card-bg) !important;
+}
+
+.breadcrumb-item {
+  color: var(--text-secondary) !important;
+}
+
+.breadcrumb-item.active {
+  color: var(--text-primary) !important;
+}
+
+/* Ensure all text in tooltips is visible */
+.tooltip {
+  --bs-tooltip-bg: var(--bg-secondary) !important;
+  --bs-tooltip-color: var(--text-primary) !important;
+}
+
+/* Ensure all text in popovers is visible */
+.popover {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+.popover-header {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+.popover-body {
+  color: var(--text-secondary) !important;
+}
+
+/* Ensure all text in spinners is visible */
+.spinner-border, .spinner-grow {
+  color: var(--accent-color) !important;
+}
+
+/* Ensure all text in progress bars is visible */
+.progress {
+  background-color: var(--bg-secondary) !important;
+}
+
+.progress-bar {
+  background-color: var(--accent-color) !important;
+}
+
+/* Ensure all text in toasts is visible */
+.toast {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+.toast-header {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+.toast-body {
+  color: var(--text-secondary) !important;
+}
+
+/* Full width layout adjustments */
+.container, .container-fluid {
+  max-width: none !important;
+  width: 100% !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+}
+
+.row {
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Remove Bootstrap's default container max-width */
+@media (min-width: 576px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container, .container-fluid {
+    max-width: none !important;
+  }
+}
+
+/* Ensure all content takes full width */
+#app > * {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+main {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin-top: 2rem !important;
+}
+
+/* Card grid adjustments */
+.card {
+  width: 100% !important;
+  margin-bottom: 1rem !important;
+  border-radius: 0 !important;
+}
+
+/* Form adjustments */
+form.card {
+  width: 100% !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Ensure proper spacing between elements */
+.gap-2 {
+  gap: 0.5rem !important;
+}
+
+/* Ensure proper alignment in full width layout */
+.d-flex {
+  width: 100% !important;
+}
+
+.justify-content-between {
+  width: 100% !important;
+}
+
+/* Ensure proper spacing in card groups */
+.btn-group {
+  width: 100% !important;
+}
+
+.btn-group .btn {
+  flex: 1 !important;
+}
+
+/* Remove any max-width constraints */
+* {
+  max-width: none !important;
+}
+
+/* Ensure navbar is full width */
+.navbar {
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+.navbar > .container-fluid {
+  padding: 0 1rem !important;
+}
+
+/* Ensure all sections take full width */
+section, div, article, aside {
+  max-width: none !important;
+}
+
+/* Ensure all Bootstrap columns take full width */
+[class*="col-"] {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0.5rem !important;
+}
+
+/* Ensure all content is properly padded */
+.content-wrapper {
+  padding: 1rem !important;
+  width: 100% !important;
+  max-width: none !important;
+}
