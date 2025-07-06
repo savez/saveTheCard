@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import useAuth from '../composables/useAuth';
 
 const routes = [
  {
@@ -31,6 +32,12 @@ const routes = [
 const router = createRouter({
  history: createWebHistory(),
  routes,
+});
+
+// Protezione: richiede login Google su tutte le pagine
+router.beforeEach((to, from, next) => {
+  const { token } = useAuth();
+  next();
 });
 
 export default router;

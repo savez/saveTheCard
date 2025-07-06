@@ -3,13 +3,17 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2>Modifica tessera</h2>
       <div>
-        <router-link :to="`/cards/${card.id}/edit`" class="btn btn-primary me-2" title="Modifica">
-          <i class="material-icons">edit</i>
-        </router-link>
         <router-link to="/cards" class="btn btn-secondary" title="Indietro">
           <i class="material-icons">arrow_back</i>
         </router-link>
       </div>
+    </div>
+
+    <div v-if="statusMessage" :class="['alert',
+      statusType === 'success' ? 'alert-success' : '',
+      statusType === 'error' ? 'alert-danger' : '',
+      statusType === 'info' ? 'alert-info' : '']">
+      {{ statusMessage }}
     </div>
 
     <form v-if="card" @submit.prevent="updateCard" class="card">
@@ -68,7 +72,7 @@
           <router-link :to="`/cards/${card.id}`" class="btn btn-secondary" title="Annulla">
             <i class="material-icons">close</i>
           </router-link>
-          <button type="submit" class="btn btn-primary" title="Salva modifiche">
+          <button type="submit" class="btn btn-primary" title="Salva modifiche" :disabled="!canSave">
             <i class="material-icons">check</i>
           </button>
         </div>
@@ -123,6 +127,17 @@ const form = ref({
   description: ''
 })
 
+const statusMessage = ref('')
+const statusType = ref('')
+
+function showStatus(msg, type = 'info', timeout = 2000) {
+  statusMessage.value = msg
+  statusType.value = type
+  if (timeout) setTimeout(() => { statusMessage.value = '' }, timeout)
+}
+
+const canSave = computed(() => !!(store.sheetUrl && (store.sheetUrl.value || store.sheetUrl)))
+
 onMounted(() => {
   if (card.value) {
     form.value = { ...card.value }
@@ -163,10 +178,19 @@ const onScanFailure = (error) => {
   console.warn(`Scan error: ${error}`)
 }
 
-const updateCard = () => {
+const updateCard = async () => {
+  if (!canSave.value) {
+    showStatus('Imposta prima il link al file Google Drive!', 'error', 3000)
+    return
+  }
   if (card.value) {
-    store.updateCard(card.value.id, form.value)
-    router.push(`/cards/${card.value.id}`)
+    try {
+      await store.updateCard(card.value.id, form.value)
+      showStatus('Tessera aggiornata su Google Drive!', 'success')
+      setTimeout(() => router.push(`/cards/${card.value.id}`), 1000)
+    } catch (e) {
+      showStatus('Errore nel salvataggio su Google Drive', 'error', 3000)
+    }
   }
 }
 </script>

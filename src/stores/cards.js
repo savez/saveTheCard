@@ -1,8 +1,114 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import useAuth from '../composables/useAuth';
 
 export const useCardsStore = defineStore("cards", () => {
  const cards = ref([]);
+ const isLoading = ref(true);
+ const { createOrUpdateFile, loadFileContent, sheetUrl, setSheetUrl, loadGapi } = useAuth();
+
+ function getFileIdFromUrl(url) {
+  // Estrae l'ID dal link Google Drive (https://drive.google.com/file/d/FILE_ID/view)
+  const match = url.match(/\/d\/([\w-]+)/);
+  return match ? match[1] : null;
+ }
+
+ async function saveToDrive() {
+  // Salva sempre su Google Sheets tramite API
+  const url = sheetUrl.value || localStorage.getItem('sheetUrl');
+  console.log('[DEBUG] sheetUrl usato:', url);
+  const match = url.match(/\/d\/([\w-]+)/);
+  const sheetId = match ? match[1] : null;
+  console.log('[DEBUG] sheetId estratto:', sheetId);
+  if (!sheetId) {
+    if (typeof window !== 'undefined') alert('ID file Google Sheets non valido!');
+    return;
+  }
+  await loadGapi();
+  window.gapi.client.setToken({ access_token: useAuth().token.value });
+  const headers = ["id", "name", "barcode", "category", "description", "createdAt"];
+  const values = [
+    headers,
+    ...cards.value.map(card => headers.map(h => card[h] || ""))
+  ];
+  console.log('[DEBUG] values da salvare su Sheets:', values);
+  try {
+    await window.gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: sheetId,
+      range: 'A1:F1000',
+      valueInputOption: 'RAW',
+      resource: { values }
+    });
+  } catch (e) {
+    console.error('Errore salvataggio su Google Sheets:', e);
+    if (typeof window !== 'undefined') alert('Errore nel salvataggio su Google Sheets: ' + (e.message || e));
+  }
+ }
+
+ async function updateDriveFileAsCSV(fileId, csvContent) {
+  await loadGapi();
+  window.gapi.client.setToken({ access_token: useAuth().token.value });
+  return window.gapi.client.request({
+    path: `/upload/drive/v3/files/${fileId}`,
+    method: 'PATCH',
+    params: { uploadType: 'media' },
+    headers: { 'Content-Type': 'text/csv' },
+    body: csvContent,
+  });
+ }
+
+ async function loadFromDrive() {
+  isLoading.value = true;
+  // Recupera i dati da Google Sheets (Excel online)
+  const url = sheetUrl.value || localStorage.getItem('sheetUrl');
+  console.log('[DEBUG] sheetUrl usato:', url);
+  const match = url.match(/\/d\/([\w-]+)/);
+  const sheetId = match ? match[1] : null;
+  console.log('[DEBUG] sheetId estratto:', sheetId);
+  if (!sheetId) {
+    if (typeof window !== 'undefined') alert('ID file Google Sheets non valido!');
+    console.error('[DEBUG] ID file Google Sheets non valido!');
+    isLoading.value = false;
+    return;
+  }
+  await loadGapi();
+  window.gapi.client.setToken({ access_token: useAuth().token.value });
+  const range = 'A1:Z1000'; // puoi adattare il range se serve
+  try {
+    console.log('[DEBUG] Chiamata a gapi.client.sheets.spreadsheets.values.get', { spreadsheetId: sheetId, range });
+    const res = await window.gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: sheetId,
+      range,
+    });
+    console.log('[DEBUG] Risultato API Sheets:', res);
+    const values = res.result.values;
+    if (!values || values.length < 2) {
+      console.log('[DEBUG] Nessun dato trovato nel file Sheets');
+      cards.value = [];
+      isLoading.value = false;
+      return;
+    }
+    const headers = values[0];
+    console.log('[DEBUG] Headers trovati:', headers);
+    const importedCards = values.slice(1).map(row => {
+      const card = {};
+      headers.forEach((header, i) => {
+        card[header] = row[i] || '';
+      });
+      card.id = Number(card.id) || Date.now() + Math.floor(Math.random() * 10000);
+      return card;
+    });
+    console.log(`[DEBUG] Tessere importate n° ${importedCards.length}:`, importedCards);
+    cards.value = importedCards;
+    isLoading.value = false;
+    return;
+  } catch (e) {
+    console.error('[DEBUG] Errore nel caricamento da Google Sheets:', e);
+    if (typeof window !== 'undefined') alert('Errore nel caricamento da Google Sheets: ' + (e.message || e));
+    cards.value = [];
+    isLoading.value = false;
+  }
+ }
 
  function addCard(card) {
   cards.value.push({
@@ -10,20 +116,20 @@ export const useCardsStore = defineStore("cards", () => {
    ...card,
    createdAt: new Date().toISOString(),
   });
-  saveToLocalStorage();
+  saveToDrive();
  }
 
  function updateCard(id, updatedCard) {
   const index = cards.value.findIndex((card) => card.id === id);
   if (index !== -1) {
    cards.value[index] = { ...cards.value[index], ...updatedCard };
-   saveToLocalStorage();
+   saveToDrive();
   }
  }
 
  function deleteCard(id) {
   cards.value = cards.value.filter((card) => card.id !== id);
-  saveToLocalStorage();
+  saveToDrive();
  }
 
  function getCard(id) {
@@ -53,17 +159,6 @@ export const useCardsStore = defineStore("cards", () => {
   link.click();
  }
 
- function saveToLocalStorage() {
-  localStorage.setItem("loyalty-cards", JSON.stringify(cards.value));
- }
-
- function loadFromLocalStorage() {
-  const savedCards = localStorage.getItem("loyalty-cards");
-  if (savedCards) {
-   cards.value = JSON.parse(savedCards);
-  }
- }
-
  function importFromCSV(file) {
   const reader = new FileReader();
   reader.onload = function (e) {
@@ -81,21 +176,35 @@ export const useCardsStore = defineStore("cards", () => {
     });
     // Sostituisci tutte le tessere con quelle importate
     cards.value = importedCards;
-    saveToLocalStorage();
+    saveToDrive();
   };
   reader.readAsText(file);
  }
 
- // Load cards from localStorage on store initialization
- loadFromLocalStorage();
+ // Carica le tessere da Drive all'inizializzazione
+ if (sheetUrl.value) {
+   loadFromDrive();
+ }
+
+ // Ricarica le tessere ogni volta che sheetUrl cambia
+ watch(sheetUrl, (newUrl) => {
+   if (newUrl) {
+     localStorage.setItem('sheetUrl', newUrl);
+     loadFromDrive();
+   }
+ });
 
  return {
   cards,
+  isLoading,
   addCard,
   updateCard,
   deleteCard,
   getCard,
   exportToCSV,
   importFromCSV,
+  saveToDrive,
+  loadFromDrive,
+  sheetUrl,
  };
 });

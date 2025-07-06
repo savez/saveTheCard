@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div v-if="card" class="card">
+    <div v-if="card" class="card">n
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
@@ -28,15 +28,6 @@
               <div class="barcode-container">
                 <img style="width: 100%;" :src="barcodeUrl" alt="Barcode" class="img-fluid">
               </div>
-            </div>
-            <div>
-              <h5>Condividi tessera</h5>
-              <div class="qrcode-container">
-                <img :src="qrCodeUrl" alt="QR Code" class="img-fluid">
-              </div>
-              <button class="btn btn-outline-primary mt-2" @click="downloadQRCode" title="Scarica QR Code">
-                <i class="material-icons">download</i>
-              </button>
             </div>
           </div>
         </div>
@@ -54,7 +45,7 @@ import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCardsStore } from '../stores/cards'
 import JsBarcode from 'jsbarcode'
-import QRCode from 'qrcode'
+
 
 const route = useRoute()
 const store = useCardsStore()
@@ -74,34 +65,8 @@ const barcodeUrl = computed(() => {
   return canvas.toDataURL()
 })
 
-const qrCodeUrl = ref('')
+watch(card, { immediate: true })
 
-async function generateQRCode() {
-  if (!card.value) {
-    qrCodeUrl.value = ''
-    return
-  }
-  const cardData = {
-    id: card.value.id,
-    name: card.value.name,
-    barcode: card.value.barcode,
-    category: card.value.category,
-    description: card.value.description
-  }
-  qrCodeUrl.value = await QRCode.toDataURL(JSON.stringify(cardData))
-}
-
-onMounted(generateQRCode)
-watch(card, generateQRCode, { immediate: true })
-
-const downloadQRCode = async () => {
-  if (!card.value) return
-  
-  const link = document.createElement('a')
-  link.href = await qrCodeUrl.value
-  link.download = `tessera-${card.value.name}.png`
-  link.click()
-}
 </script>
 
 <style scoped>
