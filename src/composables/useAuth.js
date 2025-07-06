@@ -2,6 +2,9 @@ import { ref, computed } from "vue";
 
 const CLIENT_ID =
  process.env.GOOGLE_CLIENT_ID;
+
+console.log('CLIENT_ID', CLIENT_ID);
+
 const SCOPES =
  "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file openid email profile";
 
