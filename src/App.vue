@@ -12,8 +12,17 @@
 
 <script setup>
 import pkg from '../package.json';
+import { onMounted } from 'vue';
+import useAuth from './composables/useAuth';
 
 const version = pkg.version;
+
+const { token, login } = useAuth();
+onMounted(() => {
+  if (!token.value) {
+    login();
+  }
+});
 </script>
 
 <style>

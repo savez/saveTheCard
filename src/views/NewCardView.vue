@@ -1,7 +1,12 @@
 <template>
   <div>
     <h2 class="mb-4">Nuova tessera</h2>
-
+    <div v-if="statusMessage" :class="['alert',
+      statusType === 'success' ? 'alert-success' : '',
+      statusType === 'error' ? 'alert-danger' : '',
+      statusType === 'info' ? 'alert-info' : '']">
+      {{ statusMessage }}
+    </div>
     <form @submit.prevent="saveCard" class="card">
       <div class="card-body">
         <div class="mb-3">
@@ -58,7 +63,7 @@
           <router-link to="/cards" class="btn btn-secondary" title="Annulla">
             <i class="material-icons">close</i>
           </router-link>
-          <button type="submit" class="btn btn-primary" title="Salva">
+          <button type="submit" class="btn btn-primary" title="Salva" :disabled="!canSave">
             <i class="material-icons">check</i>
           </button>
         </div>
@@ -88,7 +93,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCardsStore } from '../stores/cards'
 import { Html5Qrcode } from 'html5-qrcode'
@@ -105,6 +110,17 @@ const form = ref({
   category: '',
   description: ''
 })
+
+const statusMessage = ref('')
+const statusType = ref('')
+
+function showStatus(msg, type = 'info', timeout = 2000) {
+  statusMessage.value = msg
+  statusType.value = type
+  if (timeout) setTimeout(() => { statusMessage.value = '' }, timeout)
+}
+
+const canSave = computed(() => !!(store.sheetUrl && (store.sheetUrl.value || store.sheetUrl)))
 
 const startScanner = () => {
   modal = new Modal(document.getElementById('scannerModal'))
@@ -141,9 +157,18 @@ const onScanFailure = (error) => {
   console.warn(`Scan error: ${error}`)
 }
 
-const saveCard = () => {
-  store.addCard(form.value)
-  router.push('/cards')
+const saveCard = async () => {
+  if (!canSave.value) {
+    showStatus('Imposta prima il link al file Google Drive!', 'error', 3000)
+    return
+  }
+  try {
+    await store.addCard(form.value)
+    showStatus('Tessera salvata su Google Drive!', 'success')
+    setTimeout(() => router.push('/cards'), 1000)
+  } catch (e) {
+    showStatus('Errore nel salvataggio su Google Drive', 'error', 3000)
+  }
 }
 </script>
 
