@@ -2,8 +2,6 @@ import { ref, computed } from "vue";
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-console.log('CLIENT_ID', CLIENT_ID);
-
 const SCOPES =
  "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file openid email profile";
 
@@ -11,10 +9,16 @@ const user = ref(null);
 const token = ref(localStorage.getItem("google_token") || "");
 const sheetUrl = ref(localStorage.getItem("sheetUrl") || "");
 
+console.log('token ref', token.value);
+
 let tokenClient = null;
 let gapiLoaded = false;
 
 function initGoogle() {
+  console.log('initGoogle',{
+    client_id: CLIENT_ID,
+    scopes: SCOPES,
+  });
  if (window.google && !tokenClient) {
   tokenClient = window.google.accounts.oauth2.initTokenClient({
    client_id: CLIENT_ID,
