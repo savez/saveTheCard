@@ -7,7 +7,9 @@ SaveTheCard è un'applicazione web per gestire le tessere fedeltà e sconto dei 
 - 🔐 **Login obbligatorio con Google** (bloccante: senza login non puoi accedere all'app)
 - ☁️ **Tutte le tessere sono salvate e caricate da un file Google Sheets** (impostabile dall'utente)
 - 🗂️ **Visualizzazione tessere come card** con barcode grande e dettagli
+- 🔎 **Barra di ricerca** per filtrare rapidamente le tessere per nome o descrizione
 - ➕ **Aggiunta, modifica, eliminazione tessere** direttamente su Google Sheets
+- 🎨 **(Opzionale) Card colorate in base alla categoria**
 - 📝 **Campo per impostare/modificare il link del file Google Sheets** (in una modale)
 - ✅ **Feedback visivo** per ogni operazione
 - ❌ **Nessun salvataggio locale, nessun QR, nessuna esportazione/importazione CSV**
@@ -27,7 +29,11 @@ SaveTheCard è un'applicazione web per gestire le tessere fedeltà e sconto dei 
    - Google Sheets API
 3. **Crea un OAuth 2.0 Client ID** (tipo Web):
    - Inserisci l'URL di origine (es: http://localhost:5173)
-   - Copia il Client ID e inseriscilo nel codice (`useAuth.js`)
+   - Copia il Client ID e inseriscilo come variabile d'ambiente `VITE_GOOGLE_CLIENT_ID` in un file `.env` nella root del progetto:
+
+```env
+VITE_GOOGLE_CLIENT_ID=il_tuo_client_id_google
+```
 4. **Crea un file Google Sheets vuoto** nel tuo Drive e copia il link
 
 ## Installazione
@@ -61,6 +67,9 @@ npm run dev
 - **Login:** all'apertura dell'app viene richiesto il login Google tramite una pagina dedicata e bloccante
 - **Imposta il link del file Google Sheets** tramite il bottone "link" in alto a destra
 - **Aggiungi/modifica/elimina tessere:** tutte le operazioni aggiornano direttamente il file Google Sheets
+- **Barra di ricerca:** cerca rapidamente le tessere per nome o descrizione tramite la barra sotto i bottoni
+- **Bottoni azione:** i bottoni per aggiungere una nuova tessera o impostare il link sono piccoli e posizionati in alto a destra
+- **(Opzionale) Card colorate:** puoi personalizzare lo sfondo delle card in base alla categoria (vedi codice per dettagli)
 - **Le tessere sono mostrate come card, con barcode grande e dettagli**
 
 ## Tecnologie utilizzate
@@ -89,8 +98,24 @@ src/
 
 - `/` (home): mostra la lista delle tessere
 - `/login`: pagina di login Google (bloccante)
-- Tutte le altre rotte sono accessibili solo dopo il login
+- `/card/:id`: visualizza i dettagli di una tessera specifica
+- `/card/:id/edit`: modifica una tessera esistente
+- `/card/new`: crea una nuova tessera
+
+## Demo
+
+Puoi provare l'applicazione online all'indirizzo: [SaveTheCard Demo](https://savez.github.io/saveTheCard)
 
 ## Licenza
 
-MIT
+Questo progetto è rilasciato sotto licenza MIT. Vedi il file [LICENSE](LICENSE) per maggiori dettagli.
+
+## Contribuire
+
+I contributi sono sempre benvenuti! Se vuoi contribuire:
+
+1. Fai un fork del repository
+2. Crea un branch per la tua feature (`git checkout -b feature/NuovaFeature`)
+3. Committa i tuoi cambiamenti (`git commit -m 'Aggiungi NuovaFeature'`)
+4. Pusha sul branch (`git push origin feature/NuovaFeature`)
+5. Apri una Pull Request
