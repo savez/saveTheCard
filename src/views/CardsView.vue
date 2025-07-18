@@ -140,18 +140,7 @@ function onSetDriveUrl() {
   showUrlModal.value = false
 }
 
-onMounted(async () => {
-  // All'ingresso nella pagina, se esiste il link, carica le tessere da Drive
-  if (localStorage.getItem('sheetUrl')) {
-    store.sheetUrl.value = localStorage.getItem('sheetUrl')
-    try {
-      await store.loadFromDrive()
-      showStatus('Tessere caricate da Google Drive!', 'success')
-    } catch (e) {
-      showStatus('Errore nel caricamento da Google Drive', 'error', 3000)
-    }
-  }
-})
+
 </script>
 
 <style scoped>
