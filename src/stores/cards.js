@@ -41,7 +41,17 @@ export const useCardsStore = defineStore("cards", () => {
     });
   } catch (e) {
     console.error('Errore salvataggio su Google Sheets:', e);
-    if (typeof window !== 'undefined') alert('Errore nel salvataggio su Google Sheets: ' + (e.message || e));
+    let errorMsg = '';
+    if (typeof e === 'string') {
+      errorMsg = e;
+    } else if (e && typeof e.message === 'string') {
+      errorMsg = e.message;
+    } else if (e && e.error && typeof e.error.message === 'string') {
+      errorMsg = e.error.message;
+    } else {
+      errorMsg = JSON.stringify(e);
+    }
+    if (typeof window !== 'undefined') alert('Errore nel salvataggio su Google Sheets: ' + errorMsg);
   }
  }
 
@@ -105,7 +115,17 @@ export const useCardsStore = defineStore("cards", () => {
     return;
   } catch (e) {
     console.error('[DEBUG] Errore nel caricamento da Google Sheets:', e);
-    if (typeof window !== 'undefined') alert('Errore nel caricamento da Google Sheets: ' + (e.message || e));
+    let errorMsg = '';
+    if (typeof e === 'string') {
+      errorMsg = e;
+    } else if (e && typeof e.message === 'string') {
+      errorMsg = e.message;
+    } else if (e && e.error && typeof e.error.message === 'string') {
+      errorMsg = e.error.message;
+    } else {
+      errorMsg = JSON.stringify(e);
+    }
+    if (typeof window !== 'undefined') alert('Errore nel caricamento da Google Sheets: ' + errorMsg);
     cards.value = [];
     isLoading.value = false;
   }
