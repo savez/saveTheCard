@@ -49,7 +49,7 @@
               <div class="mb-3">
                 <div class="barcode-container text-center">
                   <img :src="getBarcodeUrl(card.barcode)" alt="Barcode" class="barcode-img" style="width: 100%;">
-                  <br/><span class="text-muted">{{ card.barcode }}</span>
+                  <span class="text-muted">{{ card.barcode }}</span>
                 </div>
               </div>
               <p class="card-text">

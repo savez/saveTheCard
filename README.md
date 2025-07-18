@@ -4,7 +4,7 @@ SaveTheCard è un'applicazione web per gestire le tessere fedeltà e sconto dei 
 
 ## Funzionalità principali
 
-- 🔐 **Login obbligatorio con Google**
+- 🔐 **Login obbligatorio con Google** (bloccante: senza login non puoi accedere all'app)
 - ☁️ **Tutte le tessere sono salvate e caricate da un file Google Sheets** (impostabile dall'utente)
 - 🗂️ **Visualizzazione tessere come card** con barcode grande e dettagli
 - ➕ **Aggiunta, modifica, eliminazione tessere** direttamente su Google Sheets
@@ -47,9 +47,18 @@ npm run dev
 ```
 4. Apri il browser all'indirizzo indicato nel terminale (es: http://localhost:5173)
 
+## Flusso di autenticazione e protezione delle rotte
+
+- **Login bloccante:**
+  - All'apertura dell'app, se non sei autenticato, verrai reindirizzato automaticamente alla pagina `/login`.
+  - La pagina `/login` mostra solo il bottone "Login con Google". Finché non effettui il login, non puoi accedere ad alcuna funzionalità dell'app.
+  - Dopo il login, verrai reindirizzato alla home (`/`) e potrai usare tutte le funzionalità.
+  - Se provi ad accedere a `/login` mentre sei già autenticato, verrai riportato alla home.
+- **Tutte le rotte sono protette** tramite un global guard del router: senza token Google non puoi navigare l'app.
+
 ## Utilizzo
 
-- **Login:** all'apertura dell'app viene richiesto il login Google
+- **Login:** all'apertura dell'app viene richiesto il login Google tramite una pagina dedicata e bloccante
 - **Imposta il link del file Google Sheets** tramite il bottone "link" in alto a destra
 - **Aggiungi/modifica/elimina tessere:** tutte le operazioni aggiornano direttamente il file Google Sheets
 - **Le tessere sono mostrate come card, con barcode grande e dettagli**
@@ -75,6 +84,12 @@ src/
 ├── stores/          # Store Pinia
 └── views/           # Viste dell'applicazione
 ```
+
+## Note sulle rotte
+
+- `/` (home): mostra la lista delle tessere
+- `/login`: pagina di login Google (bloccante)
+- Tutte le altre rotte sono accessibili solo dopo il login
 
 ## Licenza
 
