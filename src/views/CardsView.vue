@@ -1,14 +1,22 @@
 <template>
   <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <div class="d-flex gap-2">
-        <button class="btn btn-primary btn-sm" @click="showUrlModal = true" title="Imposta link Google Sheets">
-          <i class="material-icons">link</i>
+      <div class="d-flex w-100 justify-content-end align-items-center gap-1">
+        <button class="btn btn-primary btn-sm p-1" @click="showUrlModal = true" title="Imposta link Google Sheets">
+          <i class="material-icons" style="font-size: 18px;">link</i>
         </button>
-        <router-link to="/cards/new" class="btn btn-success btn-sm" title="Nuova tessera">
-          <i class="material-icons me-1">add</i>
+        <router-link to="/cards/new" class="btn btn-success btn-sm p-1" title="Nuova tessera">
+          <i class="material-icons me-1" style="font-size: 18px;">add</i>
         </router-link>
       </div>
+    </div>
+    <div class="mb-4">
+      <input
+        v-model="searchQuery"
+        type="text"
+        class="form-control form-control-lg"
+        placeholder="Cerca tessera..."
+      />
     </div>
 
     <!-- Modale per inserire/modificare il link -->
@@ -42,7 +50,7 @@
     </div>
     <div v-else>
       <div class="row">
-        <div v-for="card in store.cards" :key="card.id" class="col-md-6 col-lg-4 mb-4">
+        <div v-for="card in filteredCards" :key="card.id" class="col-md-6 col-lg-4 mb-4">
           <div class="card h-100">
             <div class="card-body">
               <h5 class="card-title text-uppercase">{{ card.name }}</h5>
