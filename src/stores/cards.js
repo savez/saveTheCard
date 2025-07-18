@@ -58,6 +58,7 @@ export const useCardsStore = defineStore("cards", () => {
  }
 
  async function loadFromDrive() {
+  console.log('[DEBUG] loadFromDrive')
   isLoading.value = true;
   // Recupera i dati da Google Sheets (Excel online)
   const url = sheetUrl.value || localStorage.getItem('sheetUrl');
