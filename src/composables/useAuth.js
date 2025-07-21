@@ -8,6 +8,8 @@ const SCOPES =
 const user = ref(null);
 const token = ref(localStorage.getItem("google_token") || "");
 const sheetUrl = ref(localStorage.getItem("sheetUrl") || "");
+const refreshToken = ref(localStorage.getItem("google_refresh_token") || "");
+let onRefreshUsed = null; // callback per notificare l'uso del refresh token
 
 console.log('token ref', token.value);
 
@@ -23,10 +25,18 @@ function initGoogle() {
   tokenClient = window.google.accounts.oauth2.initTokenClient({
    client_id: CLIENT_ID,
    scope: SCOPES,
+   // AGGIUNTA: prompt e access_type per refresh token
+   prompt: 'consent',
+   access_type: 'offline',
    callback: (resp) => {
     if (resp.access_token) {
      token.value = resp.access_token;
      localStorage.setItem("google_token", resp.access_token);
+     // Salva refresh token se presente
+     if (resp.refresh_token) {
+       refreshToken.value = resp.refresh_token;
+       localStorage.setItem("google_refresh_token", resp.refresh_token);
+     }
      fetchUserInfo();
     }
    },
@@ -135,6 +145,53 @@ async function loadFileContent(filename) {
   return download.body;
 }
 
+async function refreshAccessToken() {
+  // Usa il refresh token per ottenere un nuovo access token
+  if (!refreshToken.value) return false;
+  try {
+    const params = new URLSearchParams();
+    params.append('client_id', CLIENT_ID);
+    params.append('grant_type', 'refresh_token');
+    params.append('refresh_token', refreshToken.value);
+    const resp = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
+    });
+    const data = await resp.json();
+    if (data.access_token) {
+      token.value = data.access_token;
+      localStorage.setItem("google_token", data.access_token);
+      if (onRefreshUsed) onRefreshUsed();
+      fetchUserInfo();
+      return true;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function withTokenRetry(apiFn) {
+  // Esegue una funzione che usa il token, se fallisce prova il refresh
+  try {
+    return await apiFn(token.value);
+  } catch (e) {
+    // Se errore di autenticazione, prova refresh
+    const refreshed = await refreshAccessToken();
+    if (refreshed) {
+      return await apiFn(token.value);
+    } else {
+      // Se non c'è refresh token, forza login Google
+      if (!refreshToken.value) {
+        login();
+        throw new Error('Token scaduto: login Google richiesta');
+      }
+      throw e;
+    }
+  }
+}
+
 if (token.value && !user.value) fetchUserInfo();
 
 export default function useAuth() {
@@ -149,5 +206,8 @@ export default function useAuth() {
   createOrUpdateFile,
   loadFileContent,
   loadGapi,
+  refreshAccessToken,
+  withTokenRetry,
+  setOnRefreshUsed: (cb) => { onRefreshUsed = cb; },
  };
 }

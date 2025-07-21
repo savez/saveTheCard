@@ -5,7 +5,14 @@ import useAuth from '../composables/useAuth';
 export const useCardsStore = defineStore("cards", () => {
  const cards = ref([]);
  const isLoading = ref(true);
- const { createOrUpdateFile, loadFileContent, sheetUrl, setSheetUrl, loadGapi } = useAuth();
+ const { createOrUpdateFile, loadFileContent, sheetUrl, setSheetUrl, loadGapi, withTokenRetry, setOnRefreshUsed } = useAuth();
+
+ // Mostra alert se viene usato il refresh token
+ if (typeof window !== 'undefined') {
+   setOnRefreshUsed(() => {
+     alert('Il login è stato rinnovato automaticamente tramite refresh token.');
+   });
+ }
 
  function getFileIdFromUrl(url) {
   // Estrae l'ID dal link Google Drive (https://drive.google.com/file/d/FILE_ID/view)
@@ -25,45 +32,34 @@ export const useCardsStore = defineStore("cards", () => {
     return;
   }
   await loadGapi();
-  window.gapi.client.setToken({ access_token: useAuth().token.value });
-  const headers = ["id", "name", "barcode", "category", "description", "createdAt"];
-  const values = [
-    headers,
-    ...cards.value.map(card => headers.map(h => card[h] || ""))
-  ];
-  console.log('[DEBUG] values da salvare su Sheets:', values);
-  try {
+  await withTokenRetry(async (accessToken) => {
+    window.gapi.client.setToken({ access_token: accessToken });
+    const headers = ["id", "name", "barcode", "category", "description", "createdAt"];
+    const values = [
+      headers,
+      ...cards.value.map(card => headers.map(h => card[h] || ""))
+    ];
+    console.log('[DEBUG] values da salvare su Sheets:', values);
     await window.gapi.client.sheets.spreadsheets.values.update({
       spreadsheetId: sheetId,
       range: 'A1:F1000',
       valueInputOption: 'RAW',
       resource: { values }
     });
-  } catch (e) {
-    console.error('Errore salvataggio su Google Sheets:', e);
-    let errorMsg = '';
-    if (typeof e === 'string') {
-      errorMsg = e;
-    } else if (e && typeof e.message === 'string') {
-      errorMsg = e.message;
-    } else if (e && e.error && typeof e.error.message === 'string') {
-      errorMsg = e.error.message;
-    } else {
-      errorMsg = JSON.stringify(e);
-    }
-    if (typeof window !== 'undefined') alert('Errore nel salvataggio su Google Sheets: ' + errorMsg);
-  }
+  });
  }
 
  async function updateDriveFileAsCSV(fileId, csvContent) {
   await loadGapi();
-  window.gapi.client.setToken({ access_token: useAuth().token.value });
-  return window.gapi.client.request({
-    path: `/upload/drive/v3/files/${fileId}`,
-    method: 'PATCH',
-    params: { uploadType: 'media' },
-    headers: { 'Content-Type': 'text/csv' },
-    body: csvContent,
+  return withTokenRetry(async (accessToken) => {
+    window.gapi.client.setToken({ access_token: accessToken });
+    return window.gapi.client.request({
+      path: `/upload/drive/v3/files/${fileId}`,
+      method: 'PATCH',
+      params: { uploadType: 'media' },
+      headers: { 'Content-Type': 'text/csv' },
+      body: csvContent,
+    });
   });
  }
 
@@ -83,36 +79,37 @@ export const useCardsStore = defineStore("cards", () => {
     return;
   }
   await loadGapi();
-  window.gapi.client.setToken({ access_token: useAuth().token.value });
   const range = 'A1:Z1000'; // puoi adattare il range se serve
   try {
-    console.log('[DEBUG] Chiamata a gapi.client.sheets.spreadsheets.values.get', { spreadsheetId: sheetId, range });
-    const res = await window.gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: sheetId,
-      range,
-    });
-    console.log('[DEBUG] Risultato API Sheets:', res);
-    const values = res.result.values;
-    if (!values || values.length < 2) {
-      console.log('[DEBUG] Nessun dato trovato nel file Sheets');
-      cards.value = [];
-      isLoading.value = false;
-      return;
-    }
-    const headers = values[0];
-    console.log('[DEBUG] Headers trovati:', headers);
-    const importedCards = values.slice(1).map(row => {
-      const card = {};
-      headers.forEach((header, i) => {
-        card[header] = row[i] || '';
+    await withTokenRetry(async (accessToken) => {
+      window.gapi.client.setToken({ access_token: accessToken });
+      console.log('[DEBUG] Chiamata a gapi.client.sheets.spreadsheets.values.get', { spreadsheetId: sheetId, range });
+      const res = await window.gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: sheetId,
+        range,
       });
-      card.id = Number(card.id) || Date.now() + Math.floor(Math.random() * 10000);
-      return card;
+      console.log('[DEBUG] Risultato API Sheets:', res);
+      const values = res.result.values;
+      if (!values || values.length < 2) {
+        console.log('[DEBUG] Nessun dato trovato nel file Sheets');
+        cards.value = [];
+        isLoading.value = false;
+        return;
+      }
+      const headers = values[0];
+      console.log('[DEBUG] Headers trovati:', headers);
+      const importedCards = values.slice(1).map(row => {
+        const card = {};
+        headers.forEach((header, i) => {
+          card[header] = row[i] || '';
+        });
+        card.id = Number(card.id) || Date.now() + Math.floor(Math.random() * 10000);
+        return card;
+      });
+      console.log(`[DEBUG] Tessere importate n° ${importedCards.length}:`, importedCards);
+      cards.value = importedCards;
+      isLoading.value = false;
     });
-    console.log(`[DEBUG] Tessere importate n° ${importedCards.length}:`, importedCards);
-    cards.value = importedCards;
-    isLoading.value = false;
-    return;
   } catch (e) {
     console.error('[DEBUG] Errore nel caricamento da Google Sheets:', e);
     let errorMsg = '';
